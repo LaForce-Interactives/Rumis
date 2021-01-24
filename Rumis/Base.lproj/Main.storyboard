@@ -1,22 +1,203 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BV1-FR-VrT">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="sTs-z7-NH9">
+    <device id="retina6_0" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
         <!--Game View Controller-->
         <scene sceneID="tXr-a1-R10">
             <objects>
-                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModuleProvider="target" sceneMemberID="viewController">
-                    <sceneKitView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="3se-qz-xqx">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" xcode11CocoaTouchSystemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                    </sceneKitView>
+                <viewController id="BV1-FR-VrT" customClass="GameViewController" customModule="Rumis" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ahI-XB-KXP">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qS0-8h-Wrc">
+                                <rect key="frame" x="0.0" y="761" width="390" height="49"/>
+                                <items>
+                                    <barButtonItem title="Left" image="arrow.left" catalog="system" id="yOo-Sj-q0G">
+                                        <connections>
+                                            <action selector="Left" destination="BV1-FR-VrT" id="ehT-0u-Fue"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Right" image="arrow.right" catalog="system" id="Vsb-Qa-1ic">
+                                        <connections>
+                                            <action selector="Right" destination="BV1-FR-VrT" id="Pg5-cN-5B3"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Up" image="arrow.up" catalog="system" id="S7t-gh-9RA">
+                                        <connections>
+                                            <action selector="Up" destination="BV1-FR-VrT" id="21P-tf-Aye"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Down" image="arrow.down" catalog="system" id="HeH-UF-QVv">
+                                        <connections>
+                                            <action selector="Down" destination="BV1-FR-VrT" id="Hhy-Sk-26q"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Down" image="arrow.counterclockwise" catalog="system" id="5mZ-Bo-bTF" userLabel="Counter">
+                                        <connections>
+                                            <action selector="Counter" destination="BV1-FR-VrT" id="hi8-V7-KdF"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Down" image="arrow.clockwise" catalog="system" id="iUg-gp-fKP" userLabel="Clockwise">
+                                        <connections>
+                                            <action selector="Clockwise" destination="BV1-FR-VrT" id="I7q-iM-Xmg"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem style="plain" systemItem="flexibleSpace" id="0HH-76-eMf"/>
+                                    <barButtonItem title="OK" id="Hov-LD-xGZ">
+                                        <connections>
+                                            <action selector="OK" destination="BV1-FR-VrT" id="uMT-mh-B0v"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="PASS" id="LkP-PW-bgf">
+                                        <connections>
+                                            <action selector="AskPASSWithSender:" destination="BV1-FR-VrT" id="R7C-ai-cog"/>
+                                        </connections>
+                                    </barButtonItem>
+                                    <barButtonItem title="Menu" image="list.bullet" catalog="system" id="izE-3k-h7v" userLabel="Menu">
+                                        <connections>
+                                            <segue destination="M7c-ot-xbu" kind="unwind" unwindAction="myUnwindActionWithUnwindSegue:" id="fWT-RM-6BJ"/>
+                                        </connections>
+                                    </barButtonItem>
+                                </items>
+                            </toolbar>
+                            <sceneKitView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ob0-Xa-myo">
+                                <rect key="frame" x="0.0" y="44" width="390" height="717"/>
+                            </sceneKitView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Hint Text" textAlignment="center" lineBreakMode="tailTruncation" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="vdE-pG-KTK">
+                                <rect key="frame" x="0.0" y="44" width="390" height="30"/>
+                                <color key="backgroundColor" systemColor="tertiarySystemFillColor"/>
+                                <color key="tintColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="mIj-cs-beW"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="cRK-1P-Qzy"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ob0-Xa-myo" firstAttribute="top" secondItem="cRK-1P-Qzy" secondAttribute="top" id="15t-or-2Em"/>
+                            <constraint firstItem="qS0-8h-Wrc" firstAttribute="trailing" secondItem="cRK-1P-Qzy" secondAttribute="trailing" id="7hJ-py-OLi"/>
+                            <constraint firstItem="qS0-8h-Wrc" firstAttribute="leading" secondItem="cRK-1P-Qzy" secondAttribute="leading" id="8M1-nx-ODQ"/>
+                            <constraint firstItem="ob0-Xa-myo" firstAttribute="leading" secondItem="cRK-1P-Qzy" secondAttribute="leading" id="SzI-D2-0KH"/>
+                            <constraint firstItem="cRK-1P-Qzy" firstAttribute="bottom" secondItem="qS0-8h-Wrc" secondAttribute="bottom" id="dFh-KQ-y2l"/>
+                            <constraint firstItem="vdE-pG-KTK" firstAttribute="trailing" secondItem="cRK-1P-Qzy" secondAttribute="trailing" id="lhh-YW-NzA"/>
+                            <constraint firstItem="qS0-8h-Wrc" firstAttribute="top" secondItem="ob0-Xa-myo" secondAttribute="bottom" id="qj8-hz-5hs"/>
+                            <constraint firstItem="ob0-Xa-myo" firstAttribute="trailing" secondItem="cRK-1P-Qzy" secondAttribute="trailing" id="tWX-iu-fjX"/>
+                            <constraint firstItem="vdE-pG-KTK" firstAttribute="leading" secondItem="cRK-1P-Qzy" secondAttribute="leading" id="usU-GI-4xI"/>
+                            <constraint firstItem="vdE-pG-KTK" firstAttribute="top" secondItem="cRK-1P-Qzy" secondAttribute="top" id="z3b-fK-aFc"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="Ugg-aX-B9w"/>
+                    <connections>
+                        <outlet property="OKButton" destination="Hov-LD-xGZ" id="vrf-CR-zBp"/>
+                        <outlet property="PassButton" destination="LkP-PW-bgf" id="o0s-fz-jxV"/>
+                        <outlet property="hintLabel" destination="vdE-pG-KTK" id="gRe-Mq-A9c"/>
+                        <outlet property="scnView" destination="ob0-Xa-myo" id="9cw-aZ-03U"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
+                <exit id="M7c-ot-xbu" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
+            <point key="canvasLocation" x="2.8985507246376816" y="39.508928571428569"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="cEF-uI-17K">
+            <objects>
+                <viewController id="sTs-z7-NH9" customClass="ViewController" customModule="Rumis" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="qzE-tk-fLI">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="djE-oP-xR6">
+                                <rect key="frame" x="138.66666666666666" y="407" width="113" height="30"/>
+                                <state key="normal" title="Start New Game"/>
+                                <connections>
+                                    <segue destination="BV1-FR-VrT" kind="presentation" identifier="local" modalPresentationStyle="fullScreen" id="xD3-Xs-MB7"/>
+                                </connections>
+                            </button>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fb8-qS-XmP">
+                                <rect key="frame" x="45" y="274" width="300" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="kCT-Z1-bsd"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="2 Players"/>
+                                    <segment title="3 Players"/>
+                                    <segment title="4 Players"/>
+                                </segments>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Gve-A7-Nco">
+                                <rect key="frame" x="45" y="315" width="300" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="ESu-9C-q6i"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Tower"/>
+                                    <segment title="Corner"/>
+                                    <segment title="Steps"/>
+                                    <segment title="Pyramid"/>
+                                </segments>
+                            </segmentedControl>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="WAI-23-gfz">
+                                <rect key="frame" x="45" y="356" width="300" height="32"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="300" id="V62-9B-WW9"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Local"/>
+                                    <segment title="Online"/>
+                                </segments>
+                            </segmentedControl>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="Q6N-jn-yhp"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="fb8-qS-XmP" firstAttribute="centerX" secondItem="qzE-tk-fLI" secondAttribute="centerX" id="1Hu-bb-gWT"/>
+                            <constraint firstItem="djE-oP-xR6" firstAttribute="centerX" secondItem="qzE-tk-fLI" secondAttribute="centerX" id="4XN-Ap-IBY"/>
+                            <constraint firstItem="Gve-A7-Nco" firstAttribute="centerX" secondItem="qzE-tk-fLI" secondAttribute="centerX" id="AyV-UG-H7x"/>
+                            <constraint firstItem="djE-oP-xR6" firstAttribute="top" secondItem="WAI-23-gfz" secondAttribute="bottom" constant="20" id="Rvz-Rp-zMV"/>
+                            <constraint firstItem="Gve-A7-Nco" firstAttribute="top" secondItem="fb8-qS-XmP" secondAttribute="bottom" constant="10" id="S3V-HR-jO7"/>
+                            <constraint firstItem="djE-oP-xR6" firstAttribute="centerY" secondItem="qzE-tk-fLI" secondAttribute="centerY" id="WXy-mQ-dfm"/>
+                            <constraint firstItem="djE-oP-xR6" firstAttribute="centerX" secondItem="qzE-tk-fLI" secondAttribute="centerX" id="lSt-Aa-hii"/>
+                            <constraint firstItem="WAI-23-gfz" firstAttribute="top" secondItem="Gve-A7-Nco" secondAttribute="bottom" constant="10" id="oVc-Wg-YLn"/>
+                            <constraint firstItem="WAI-23-gfz" firstAttribute="centerX" secondItem="qzE-tk-fLI" secondAttribute="centerX" id="oeh-5i-4fc"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="iGz-RB-PMv"/>
+                    <connections>
+                        <outlet property="localOnlineSeg" destination="WAI-23-gfz" id="cs1-Nx-0vo"/>
+                        <outlet property="mapNameSeg" destination="Gve-A7-Nco" id="d3O-Rx-3OE"/>
+                        <outlet property="numPlayerSeg" destination="fb8-qS-XmP" id="KlG-wo-eB3"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="bQA-un-tlr" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-834.39999999999998" y="39.130434782608695"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="arrow.clockwise" catalog="system" width="115" height="128"/>
+        <image name="arrow.counterclockwise" catalog="system" width="115" height="128"/>
+        <image name="arrow.down" catalog="system" width="120" height="128"/>
+        <image name="arrow.left" catalog="system" width="128" height="98"/>
+        <image name="arrow.right" catalog="system" width="128" height="98"/>
+        <image name="arrow.up" catalog="system" width="120" height="128"/>
+        <image name="list.bullet" catalog="system" width="128" height="88"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="tertiarySystemFillColor">
+            <color red="0.46274509803921571" green="0.46274509803921571" blue="0.50196078431372548" alpha="0.12" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
