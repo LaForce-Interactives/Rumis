@@ -40,7 +40,7 @@ class Block{
         typeid = Int(n.suffix(n.count-2)) ?? 0
         points = Block.allPoints[typeid]
         rotInts = bnode.getRotInts()
-        setPoints(node: bnode)
+        setRotatedPoints()
     }
     
     public var size: [Int]{
@@ -55,7 +55,11 @@ class Block{
     }
     
     public func setRotInts(rot: [Int]){
-        self.rotInts = rot
+        rotInts = rot
+        setRotatedPoints()
+    }
+    
+    public func setRotatedPoints(){
         let node = SCNNode()
         for p in Block.allPoints[typeid]{
             let subnode = SCNNode()
@@ -63,10 +67,6 @@ class Block{
             node.addChildNode(subnode)
         }
         node.setRotInts(rot: rotInts)
-        setPoints(node: node)
-    }
-    
-    public func setPoints(node: SCNNode){
         // record position
         var pos:[[Float]] = node.childNodes.map{
             p in [p.worldPosition.x, p.worldPosition.y, p.worldPosition.z]
@@ -85,11 +85,9 @@ class Block{
         }
     }
     
-    static let playerColors: [UIColor] = [.systemRed, .systemGreen, .systemYellow, .systemBlue]
-    
     func makeMaterial(_ playerID: Int) -> SCNMaterial{
         let mat = SCNMaterial()
-        mat.diffuse.contents = Block.playerColors[playerID]
+        mat.diffuse.contents = Game.playerColors[playerID]
         return mat
     }
     
@@ -115,13 +113,11 @@ class Block{
 
 extension SCNNode{ // Convert global orientation and integer rotation numbers
     func getRotInts() -> [Int]{ // [x,y,z,w] in angle axis
-        let n = SCNNode()
-        n.orientation = self.worldOrientation
-        var res:[Int] = [n.rotation.x, n.rotation.y, n.rotation.z].map{
+        var res:[Int] = [rotation.x, rotation.y, rotation.z].map{
             r in r < -0.2 ? -1 : (r > 0.2 ? 1 : 0)
         }
         let split: Int = [1,4,2,3][res.map{abs($0)}.reduce(0,+)] // splits of 2 pi
-        var w = Int(round(n.rotation.w / (Float.pi * 2 / Float(split)))) % split
+        var w = Int(round(rotation.w / (Float.pi * 2 / Float(split)))) % split
         w = w >= 0 ? w : w + split
         if w == 0 { return [0,0,0,0] }
         res.append(w)
@@ -129,11 +125,9 @@ extension SCNNode{ // Convert global orientation and integer rotation numbers
     }
     
     func setRotInts(rot: [Int]){
-        let n = SCNNode()
         let r = rot.map{Float($0)}
         let split = [1,4,2,3][rot.prefix(3).map{abs($0)}.reduce(0,+)]
         let rad = Float.pi * 2 / Float(split) * r[3]
-        n.rotation = SCNVector4(r[0], r[1], r[2], rad)
-        self.worldOrientation = n.orientation
+        self.rotation = SCNVector4(r[0], r[1], r[2], rad)
     }
 }

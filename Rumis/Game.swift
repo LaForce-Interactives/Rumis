@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import UIKit
 
 struct GameState: Codable {
+    var numPlayers: Int
     var mapName: String // For Custom map
     var maxHeight: [[Int]] = []// height map
     var history: [[Int]] = []
@@ -15,6 +17,7 @@ struct GameState: Codable {
     var playerIDs: [String] // For online players and numplayer
     
     init(n_player: Int = 2, mapName: String = "Tower"){
+        numPlayers = n_player
         playerIDs = Array(repeating: "", count: n_player)
         self.mapName = mapName
         switch mapName{
@@ -82,16 +85,17 @@ struct GameState: Codable {
 class Game{
     var state: GameState
     var isOnline: Bool = false
-    var localPlayerID = -1
+    
+    static let playerNames = ["Red", "Green", "Yellow", "Blue"]
+    static let playerColors: [UIColor] = [.systemRed, .systemGreen, .systemYellow, .systemBlue]
 
     init(state: GameState) {
         self.state = state
         let L = state.maxHeight.count
         let W = state.maxHeight[0].count
         boardStatus = Array(repeating: Array(repeating: [], count: W), count: L)
-        let n = state.playerIDs.count
-        passed = Array(repeating: false, count: n)
-        played = Array(repeating: false, count: n)
+        let n = state.numPlayers
+        passed = Array(repeating: 0, count: n)
         blocksRemain = Array(repeating: Array(repeating: true, count: 11), count: n)
     }
     
@@ -99,15 +103,17 @@ class Game{
     var turnNumber: Int = 0 // Number of turns replayed
     var currentPlayer: Int = 0
     var boardStatus: [[[Int]]] // x, z, and list of ownerid from bottom to top
-    var passed: [Bool] // Whether players has passed
-    var played: [Bool] // Whether players has at least one block on board
+    var passed: [Int] // The order of player passes, 0 means not passed
     var blocksRemain: [[Bool]] // n_player by 11 bool
+    func played(player i:Int) -> Bool{
+        return blocksRemain[i].filter{!$0}.count > 0
+    }
     
     func replayStep(){ // Move one step forward
         if (turnNumber >= state.history.count) {return}
         let move = state.history[turnNumber]
         if (move[0] == -1){
-            passed[currentPlayer] = true
+            passed[currentPlayer] = passed.max()!+1
         }else{
             let pts = pointsForMove(move: move)
             // Update board status
@@ -120,30 +126,65 @@ class Game{
                 }
             }
             blocksRemain[currentPlayer][move[0]] = false
-            played[currentPlayer] = true
         }
         turnNumber += 1
+        // next player
         let n = passed.count
-        var np = -1 // next player
         for i in 1...n{
-            np = (currentPlayer+i) % n
-            if !passed[np] { break }
+            currentPlayer += 1
+            if currentPlayer >= n { currentPlayer -= n }
+            if passed[currentPlayer] == 0 { break }
+            if i == n { currentPlayer = -1}
         }
-        currentPlayer = passed[np] ? -1 : np
+    }
+    
+    func revertStep(){ // Move one step backward
+        if turnNumber <= 0 { return }
+        if currentPlayer == -1 { return }
+        let move = state.history[turnNumber-1]
+        if move[0] == -1{ // revert pass
+            let i = passed.indices.max{passed[$0]<passed[$1]}!
+            passed[i] = 0
+        }else{
+            let b = Block(id: move[0])
+            b.setRotInts(rot: [move[1],move[2],move[3],move[4]])
+            for p in b.points{
+                boardStatus[p[0]+move[5]][p[2]+move[6]].removeLast()
+            }
+        }
+        turnNumber -= 1
+        // previous player
+        let n = passed.count
+        for _ in 1...n{
+            currentPlayer -= 1
+            if currentPlayer < 0 { currentPlayer += n }
+            if passed[currentPlayer] == 0 { break }
+        }
+        if move[0] != -1{
+            blocksRemain[currentPlayer][move[0]] = true
+        }
     }
     
     func executeMove(move: [Int]){
         // Validity check
         if move.count == 0 { return }
         if move[0] == -1{
-            assert(!passed[currentPlayer])
+            assert(passed[currentPlayer] == 0)
         }else{
             assert(blocksRemain[currentPlayer][move[0]])
             assert(isValidMove(points: pointsForMove(move: move)) == "")
         }
         
+        if turnNumber < state.history.count{
+            state.history = Array(state.history[..<turnNumber])
+            print("Warning: Undo-ed steps cleared.")
+        }
+        
         state.history.append(move)
         replayStep()
+        if isOnline{
+            GameCenterHelper.helper.currentMatch!.sendTurn(game: self)
+        }
     }
     
     func pointsForMove(move: [Int]) -> [[Int]]{
@@ -168,9 +209,9 @@ class Game{
     }
     
     func isValidMove(points: [[Int]]) -> String{
-        var touch = state.history.filter{$0[0] != -1}.count == 0
+        var touch = state.history[..<turnNumber].filter{$0[0] != -1}.count == 0
         // If is the first block, no need to check it touches other block of same / different color
-        let first = !played[currentPlayer]
+        let first = !played(player: currentPlayer)
         let s = state.boardSize
         for p in points{
             // out of bounds
